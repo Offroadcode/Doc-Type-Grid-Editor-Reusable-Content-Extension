@@ -1,0 +1,8 @@
+{
+    javascript: [
+        "~/app_plugins/DocTypeGridEditorReusableContent/js/DocTypeGridEditorReusableContent.js"
+    ],
+    css: [
+        "~/app_plugins/DocTypeGridEditorReusableContent/css/DocTypeGridEditorReusableContent.css"
+    ]
+}

@@ -1,0 +1,1 @@
+An extension for https://github.com/umco/umbraco-doc-type-grid-editor to make doc type content saved to grids reusable. Learn more at https://github.com/Offroadcode/Doc-Type-Grid-Editor-Reusable-Content-Extension.
