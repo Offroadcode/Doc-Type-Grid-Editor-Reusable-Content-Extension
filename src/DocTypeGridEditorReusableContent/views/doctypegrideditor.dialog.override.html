@@ -24,6 +24,14 @@
                 </fieldset>
 
             </div>
+            <div ng-show="content !== false" class="control-group umb-control-group">
+                <button type="button" class="btn umb-button__button" ng-click="selectNodeToCopyUnder()">
+                    Clone Under Content Node
+                </button>
+                <button type="button" class="btn umb-button__button" ng-click="selectNodeToImportFrom()">
+                    Import From Content Node
+                </button>
+            </div>
 
         </div>
 
@@ -31,9 +39,6 @@
             <div class="umb-el-wrap umb-panel-buttons">
                 <div class="btn-toolbar umb-btn-toolbar pull-right">
 
-                    <a class="btn btn-link">
-                        Copy
-                    </a>
 
                     <a href ng-click="close()" class="btn btn-link">
                         <localize key="general_cancel">Cancel</localize>
