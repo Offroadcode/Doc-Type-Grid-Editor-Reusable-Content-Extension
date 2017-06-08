@@ -93,7 +93,8 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
             if ($scope.node) {
                 var value = {
                     name: $scope.dialogOptions.editorName,
-                    id: $scope.linkedNode.id
+                    id: $scope.linkedNode.id,
+                    linkedId: $scope.linkedNode.id
                 };
 
                 for (var t = 0; t < $scope.node.tabs.length; t++) {
@@ -256,7 +257,8 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
 
             var value = {
                 name: $scope.dialogOptions.editorName,
-                id: $scope.linkedNode.id ? $scope.linkedNode.id : $scope.dialogOptions.dialogData.value.id
+                id: $scope.linkedNode.id ? $scope.linkedNode.id : $scope.dialogOptions.dialogData.value.id,
+                linkedId: $scope.linkedNode.id ? $scope.linkedNode.id : $scope.dialogOptions.dialogData.value.id
             };
 
             for (var t = 0; t < $scope.node.tabs.length; t++) {
