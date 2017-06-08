@@ -207,7 +207,6 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
                     }
                     contentResource.save(newNode, true, []).then(function(savedNode) {
                         var nodeToUpdate = copyContentIntoNode($scope.content, savedNode);
-                        nodeContent.dtgeLinkedId = "";
                         contentResource.publish(nodeToUpdate, false, []).then(function(updatedNode){
                             notificationsService.success('Content Saved', 'Your doc type grid data has been successfully saved for reuse as a content node.')
                         });
@@ -233,7 +232,9 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
                         for (var j = 0; j < node.tabs[i].properties.length; j++) {
                             if (node.tabs[i].properties[j]) {
                                 if (node.tabs[i].properties[j].alias == prop) {
-                                    node.tabs[i].properties[j].value = content[prop];
+                                    if (node.tabs[i].properties[j].alias !== "dtgeLinkedID") {
+                                        node.tabs[i].properties[j].value = content[prop];
+                                    }
                                 }
                             }
                         }
