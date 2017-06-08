@@ -11,7 +11,6 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
 	* @description Triggered on the controller loaded, kicks off any initialization functions.
 	*/
     $scope.init = function() {
-        console.info('scope', $scope);
         $scope.setVariables();
         getNodeContent();
     };
