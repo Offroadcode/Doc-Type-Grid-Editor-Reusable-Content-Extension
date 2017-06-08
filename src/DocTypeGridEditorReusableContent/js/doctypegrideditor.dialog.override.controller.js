@@ -145,6 +145,8 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
     $scope.selectNodeToImportFrom = function() {
         var options = {
             multipicker: false,
+            filterCssClass: 'not-allowed not-published',
+            filter: $scope.node.contentTypeAlias,            
             callback: $scope.processSelectedNodeToImportFrom
         };
         dialogService.contentPicker(options);
@@ -159,6 +161,8 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
     $scope.selectNodeToLink = function() {
         var options = {
             multipicker: false,
+            filterCssClass: 'not-allowed not-published',
+            filter: $scope.node.contentTypeAlias,
             callback: $scope.processSelectedNodeToLink
         };
         dialogService.contentPicker(options);        
@@ -202,7 +206,7 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
                     }
                     contentResource.save(newNode, true, []).then(function(savedNode) {
                         var nodeToUpdate = copyContentIntoNode($scope.content, savedNode);
-                        contentResource.save(nodeToUpdate, false, []).then(function(updatedNode){
+                        contentResource.publish(nodeToUpdate, false, []).then(function(updatedNode){
                             notificationsService.success('Content Saved', 'Your doc type grid data has been successfully saved for reuse as a content node.')
                         });
                     });
