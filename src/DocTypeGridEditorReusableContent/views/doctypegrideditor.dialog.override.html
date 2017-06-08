@@ -5,33 +5,63 @@
 
         <div class="umb-panel-body no-header with-footer umb-scrollable" ng-switch="dialogMode">
 
-            <umb-control-group label="Choose a content type" ng-switch-when="selectDocType">
-                <select class="umb-editor" ng-change="selectDocType()" name="selectDocType" ng-model="$parent.$parent.selectedDocType" ng-options="dt as dt.name for dt in docTypes" required>
-                    <option value=""><localize key="choose" />...</option>
-                </select>
-            </umb-control-group>
 
-            <div ng-switch-when="edit">
+            <!-- normal dialog view -->
+            <div ng-show="!isLinkedToNode">
+                <umb-control-group label="Choose a content type" ng-switch-when="selectDocType">
+                    <select class="umb-editor" ng-change="selectDocType()" name="selectDocType" ng-model="$parent.$parent.selectedDocType" ng-options="dt as dt.name for dt in docTypes" required>
+                        <option value=""><localize key="choose" />...</option>
+                    </select>
+                </umb-control-group>
 
-                <fieldset ng-repeat="tab in node.tabs">
-                    <legend style="font-size: 18px;">{{tab.alias}}</legend>
+                <div ng-switch-when="edit">
 
-                    <umb-property property="property"
-                                  ng-repeat="property in tab.properties">
-                        <umb-editor model="property"></umb-editor>
-                    </umb-property>
+                    <fieldset ng-repeat="tab in node.tabs">
+                        <legend style="font-size: 18px;">{{tab.alias}}</legend>
 
-                </fieldset>
+                        <umb-property property="property"
+                                    ng-repeat="property in tab.properties">
+                            <umb-editor model="property"></umb-editor>
+                        </umb-property>
+
+                    </fieldset>
+
+                </div>
+
+                <!-- added buttons -->
+                <div ng-show="content !== false" class="control-group umb-control-group row">
+                    <div class="btn-toolbar umb-btn-toolbar pull-right">
+                    <button type="button" class="btn umb-button__button" ng-click="selectNodeToCopyUnder()">
+                        Export To Node
+                    </button>
+                    <button type="button" class="btn umb-button__button" ng-click="selectNodeToImportFrom()">
+                        Import
+                    </button>
+                    <button type="button" class="btn umb-button__button" ng-click="selectNodeToLink()">
+                        Link To Node
+                    </button>
+                    </div>
+                </div>
 
             </div>
-            <div ng-show="content !== false" class="control-group umb-control-group">
-                <button type="button" class="btn umb-button__button" ng-click="selectNodeToCopyUnder()">
-                    Clone Under Content Node
-                </button>
-                <button type="button" class="btn umb-button__button" ng-click="selectNodeToImportFrom()">
-                    Import From Content Node
-                </button>
+
+            <!-- when content linked to a different node -->
+            <div ng-show="isLinkedToNode">
+                <umb-pane>
+                    <h3>This Content Is Linked To A Node.</h3>
+                    <p>The content for this grid control is current linked 
+                        to the content node '<a href="{{linkedNode.url}}"><i class="icon-link"></i> {{linkedNode.name}} ({{linkedNode.id}})</a>'. 
+                        Changes to the content in that node will update this grid control. 
+                        If you wish to edit this control's' content independantly 
+                        of the node, you must first unlink it.</p>
+                </umb-pane>
+                <div class="control-group umb-control-group">
+                    <button type="button" class="btn umb-button__button" ng-click="unlinkFromNode()">
+                        Unlink
+                    </button>
+                </div>                
             </div>
+
 
         </div>
 

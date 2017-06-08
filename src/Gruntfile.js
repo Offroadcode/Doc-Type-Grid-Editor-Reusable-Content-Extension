@@ -45,6 +45,9 @@ module.exports = function(grunt) {
             },
             dist: {
                 src: [
+                    "DocTypeGridEditorReusableContent/js/confirm.import.dialog.controller.js",
+                    "DocTypeGridEditorReusableContent/js/confirm.link.dialog.controller.js",
+                    "DocTypeGridEditorReusableContent/js/confirm.save.dialog.controller.js",
                     "DocTypeGridEditorReusableContent/js/doctypegrideditor.dialog.interceptor.js",
                     "DocTypeGridEditorReusableContent/js/doctypegrideditor.dialog.override.controller.js"
                 ],
