@@ -212,6 +212,14 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
         }
     };
 
+    /**
+     * @method copyContentIntoNode
+     * @param {Object} content 
+     * @param {Object} node
+     * @returns {Object}
+     * @description Copies the content currently in the dialog editors into the 
+     * chosen node object and returns it. 
+     */
     function copyContentIntoNode(content, node) {
         for (var prop in content) {
             if (content.hasOwnProperty(prop)) {
@@ -242,7 +250,6 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
         // So check that it exists first.
         if ($scope.node !== null) {
 
-
             var value = {
                 name: $scope.dialogOptions.editorName,
                 id: $scope.linkedNode.id ? $scope.linkedNode.id : $scope.dialogOptions.dialogData.value.id
@@ -270,6 +277,12 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
         }
     };
 
+    /**
+     * @method getLinkedNode
+     * @returns {void}
+     * @description Builds an object representing the linked node, if any is linked, 
+     * and sets the flag to indicate a node is linked.
+     */
     $scope.getLinkedNode = function() {
         if ($scope.dialogOptions.dialogData.value.id) {
             $scope.linkedNode.id = $scope.dialogOptions.dialogData.value.id;
@@ -281,6 +294,13 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
         }
     };
 
+    /**
+     * @method importFromNode
+     * @param {number} nodeId 
+     * @returns {void}
+     * @description Imports the data needed for the dialog's content from the 
+     * chosen node.
+     */
     function importFromNode(nodeId) {
         contentResource.getById(nodeId).then(function(node) {
             if (node && node.contentTypeAlias && node.contentTypeAlias == $scope.node.contentTypeAlias) {
