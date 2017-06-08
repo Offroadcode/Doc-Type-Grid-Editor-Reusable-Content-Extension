@@ -15,15 +15,13 @@
                 </umb-control-group>
 
                 <div ng-switch-when="edit">
-
+                    
                     <fieldset ng-repeat="tab in node.tabs">
                         <legend style="font-size: 18px;">{{tab.alias}}</legend>
-
                         <umb-property property="property"
                                     ng-repeat="property in tab.properties">
-                            <umb-editor model="property"></umb-editor>
+                            <umb-editor model="property" ng-if="property.alias !== 'dtgeLinkedId'"></umb-editor>
                         </umb-property>
-
                     </fieldset>
 
                 </div>
@@ -31,15 +29,15 @@
                 <!-- added buttons -->
                 <div ng-show="content !== false" class="control-group umb-control-group row">
                     <div class="btn-toolbar umb-btn-toolbar pull-right">
-                    <button type="button" class="btn umb-button__button" ng-click="selectNodeToCopyUnder()">
-                        Export To Node
-                    </button>
-                    <button type="button" class="btn umb-button__button" ng-click="selectNodeToImportFrom()">
-                        Import
-                    </button>
-                    <button type="button" class="btn umb-button__button" ng-click="selectNodeToLink()">
-                        Link To Node
-                    </button>
+                        <button type="button" class="btn umb-button__button" ng-click="selectNodeToCopyUnder()">
+                            Export To Node
+                        </button>
+                        <button type="button" class="btn umb-button__button" ng-click="selectNodeToImportFrom()">
+                            Import
+                        </button>
+                        <button type="button" class="btn umb-button__button" ng-click="selectNodeToLink()" ng-show="canLink">
+                            Link To Node
+                        </button>
                     </div>
                 </div>
 

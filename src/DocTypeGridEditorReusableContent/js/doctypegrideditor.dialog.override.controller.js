@@ -21,6 +21,7 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
     * @description Sets up the initial variables for the view.
     */
     $scope.setVariables = function() {
+        $scope.canLink = false;
         $scope.isLinkedToNode = false;
         $scope.linkedNode = {
             id: 0,
@@ -92,9 +93,7 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
             // Copy property values to scope model value
             if ($scope.node) {
                 var value = {
-                    name: $scope.dialogOptions.editorName,
-                    id: $scope.linkedNode.id,
-                    linkedId: $scope.linkedNode.id
+                    name: $scope.dialogOptions.editorName
                 };
 
                 for (var t = 0; t < $scope.node.tabs.length; t++) {
@@ -181,7 +180,8 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
             name: '',
             url: ''
         };
-        $scope.dialogOptions.dialogData.value.id = 0;
+        $scope.content.dtgeLinkedId = "";
+        $scope.updateLinkedId("");
         getNodeContent();
     }
 
@@ -207,12 +207,12 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
                     }
                     contentResource.save(newNode, true, []).then(function(savedNode) {
                         var nodeToUpdate = copyContentIntoNode($scope.content, savedNode);
+                        nodeContent.dtgeLinkedId = "";
                         contentResource.publish(nodeToUpdate, false, []).then(function(updatedNode){
                             notificationsService.success('Content Saved', 'Your doc type grid data has been successfully saved for reuse as a content node.')
                         });
                     });
                 }
-
             });
         }
     };
@@ -256,9 +256,7 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
         if ($scope.node !== null) {
 
             var value = {
-                name: $scope.dialogOptions.editorName,
-                id: $scope.linkedNode.id ? $scope.linkedNode.id : $scope.dialogOptions.dialogData.value.id,
-                linkedId: $scope.linkedNode.id ? $scope.linkedNode.id : $scope.dialogOptions.dialogData.value.id
+                name: $scope.dialogOptions.editorName
             };
 
             for (var t = 0; t < $scope.node.tabs.length; t++) {
@@ -276,7 +274,7 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
             if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
                 $scope.$apply();
             }
-            $scope.getLinkedNode();           
+            $scope.getLinkedNode(value);           
         } else {
             // It didn't exist yet, so wait briefly before trying again.
             setTimeout(getNodeContent, 100);
@@ -289,14 +287,17 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
      * @description Builds an object representing the linked node, if any is linked, 
      * and sets the flag to indicate a node is linked.
      */
-    $scope.getLinkedNode = function() {
-        if ($scope.dialogOptions.dialogData.value.id) {
-            $scope.linkedNode.id = $scope.dialogOptions.dialogData.value.id;
-            $scope.linkedNode.url = '/umbraco#/content/content/edit/' + $scope.dialogOptions.dialogData.value.id;
-            contentResource.getById($scope.dialogOptions.dialogData.value.id).then(function(node) {
-                $scope.linkedNode.name = node.name;
-                $scope.isLinkedToNode = true;
-            });
+    $scope.getLinkedNode = function(value) {
+        if (value && (value.dtgeLinkedId || value.dtgeLinkedId == "")) {
+            $scope.canLink = true;
+            if (value.dtgeLinkedId !== "") {
+                $scope.linkedNode.id = value.dtgeLinkedId;
+                $scope.linkedNode.url = '/umbraco#/content/content/edit/' + value.dtgeLinkedId;
+                contentResource.getById(value.dtgeLinkedId).then(function(node) {
+                    $scope.linkedNode.name = node.name;
+                    $scope.isLinkedToNode = true;
+                });
+            }
         }
     };
 
@@ -313,7 +314,9 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
                 for (var i = 0; i < node.tabs.length; i++) {
                     if ($scope.node.tabs[i]) {
                         for (var j = 0; j < node.tabs[i].properties.length; j++) {
-                            $scope.node.tabs[i].properties[j].value = node.tabs[i].properties[j].value;
+                            if (node.tabs[i].properties[j].alias !== 'dtgeLinkedId') { // don't want to overwrite any linked ID.
+                                $scope.node.tabs[i].properties[j].value = node.tabs[i].properties[j].value;
+                            }
                         }
                     }
                 }
@@ -430,15 +433,26 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
      * @description Handles the data returned from the link confirm dialog. 
      */
     function processLinkConfirmDialog(data) {
-        $scope.dialogOptions.dialogData.id == data.nodeId;
+        $scope.updateLinkedId(data.nodeId);
         importFromNode(data.nodeId);
         $scope.isLinkedToNode = true;
         $scope.linkedNode = {
             id: data.nodeId,
             name: data.nodeName,
             url: data.nodeUrl
-        };        
+        };
+    };
 
+    $scope.updateLinkedId = function(nodeId) {
+        if ($scope.node && $scope.node.tabs && $scope.node.tabs.length > 0) {
+            for (var i = 0; i < $scope.node.tabs.length; i++) {
+                for (var j = 0; j < $scope.node.tabs[i].properties.length; j++) {
+                    if ($scope.node.tabs[i].properties[j].alias == 'dtgeLinkedId') {
+                        $scope.node.tabs[i].properties[j].value = nodeId;
+                    }
+                }
+            }
+        }
     };
 
     /* Init */
