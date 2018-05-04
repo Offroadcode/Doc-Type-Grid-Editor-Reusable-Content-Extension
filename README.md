@@ -1,5 +1,7 @@
 # Doc Type Grid Editor Reusable Content Extension &middot; ![version](https://img.shields.io/badge/version-1.0.0-green.svg) [![our umbraco](https://img.shields.io/badge/our-umbraco-orange.svg)](https://our.umbraco.org/projects/backoffice-extensions/doctype-grid-editor-reusable-content-extension/)
 
+**Note:** [Doc Type Grid Editor](https://our.umbraco.org/projects/backoffice-extensions/doc-type-grid-editor) swapped from using the old dialog panels to the newer overlays in v0.5. As a result, DTGERCE v1.0 is not compatible with any version of DTGE from that version onward. An update is in the works that is compatible with the newer DTGE.
+
 An extension of the [Doc Type Grid Editor](https://our.umbraco.org/projects/backoffice-extensions/doc-type-grid-editor) to make it easy to export, import, and link doc type grid content with nodes in the content tree.
 
 Using the grid is one of the best content experiences an editor can have, but there's still some frustrations. Copying and pasting content for use on multiple pages is one that we want to eliminate. We've added a few features to Matt & Lee's already exceptional package to take this up a notch. With the DTGERCE (check out that acronym!), you can:
