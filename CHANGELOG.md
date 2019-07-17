@@ -1,5 +1,11 @@
 # Change Log
 
+## v2.0.0
+
+### Changed
+
+* Made compatible with the overlay functionality of DTGE v0.6.1.
+
 ## v1.0.0-rc4
 
 ### Fixed

@@ -1,8 +1,8 @@
-# Doc Type Grid Editor Reusable Content Extension &middot; ![version](https://img.shields.io/badge/version-1.0.0-green.svg) [![our umbraco](https://img.shields.io/badge/our-umbraco-orange.svg)](https://our.umbraco.org/projects/backoffice-extensions/doctype-grid-editor-reusable-content-extension/)
-
-**Note:** [Doc Type Grid Editor](https://our.umbraco.org/projects/backoffice-extensions/doc-type-grid-editor) swapped from using the old dialog panels to the newer overlays in v0.5. As a result, DTGERCE v1.0 is not compatible with any version of DTGE from that version onward. An update is in the works that is compatible with the newer DTGE.
+# Doc Type Grid Editor Reusable Content Extension &middot; ![version](https://img.shields.io/badge/version-2.0.0-green.svg) [![our umbraco](https://img.shields.io/badge/our-umbraco-orange.svg)](https://our.umbraco.org/projects/backoffice-extensions/doctype-grid-editor-reusable-content-extension/)
 
 An extension of the [Doc Type Grid Editor](https://our.umbraco.org/projects/backoffice-extensions/doc-type-grid-editor) to make it easy to export, import, and link doc type grid content with nodes in the content tree.
+
+**Compatible with Doc Type Grid Editor v0.6.1 and higher.**
 
 Using the grid is one of the best content experiences an editor can have, but there's still some frustrations. Copying and pasting content for use on multiple pages is one that we want to eliminate. We've added a few features to Matt & Lee's already exceptional package to take this up a notch. With the DTGERCE (check out that acronym!), you can:
 
@@ -15,7 +15,7 @@ Using the grid is one of the best content experiences an editor can have, but th
 
 You can install the selected release through the Umbraco package installer or [download and install locally from Our](https://our.umbraco.org/projects/backoffice-extensions/doctype-grid-editor-reusable-content-extension/).
 
-This package requires the [Doc Type Grid Editor](https://our.umbraco.org/projects/backoffice-extensions/doc-type-grid-editor) package (v0.4.0) to be already installed, as it extends its functionality.
+This package requires the [Doc Type Grid Editor](https://our.umbraco.org/projects/backoffice-extensions/doc-type-grid-editor) package (v0.6.1) to be already installed, as it extends its functionality.
 
 You can use the import and export functionality of this package with no further work on your part. But for any doc types you wish to be able to use as grid content that can link to a content node (allowing such grid areas to automatically update when you update a linked node) you must add a label property with the alias 'dtgeLinkedId' to them. This will make the 'Link to Node' button work.
 

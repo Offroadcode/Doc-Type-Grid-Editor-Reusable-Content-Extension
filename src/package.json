@@ -1,6 +1,6 @@
 {
   "name": "DocTypeGridEditorReusableContent",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "dependencies": {
     "grunt": "~0.4.2",
     "bower": "~1.2.8",
