@@ -206,7 +206,7 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
                         newNode.name = $scope.content.name ? $scope.content.name : "Copied Doc Type Grid Content";
                     }
                     contentResource.save(newNode, true, []).then(function(savedNode) {
-                        var nodeToUpdate = copyContentIntoNode($scope.content, savedNode);
+                        var nodeToUpdate = copyContentIntoNode($scope.model.dialogData.value, $scope.nodeContext.tabs, savedNode);
                         contentResource.publish(nodeToUpdate, false, []).then(function(updatedNode){
                             notificationsService.success('Content Saved', 'Your doc type grid data has been successfully saved for reuse as a content node.')
                         });
@@ -219,23 +219,30 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
     /**
      * @method copyContentIntoNode
      * @param {Object} content 
+     * @param {JSON[]} tabs
      * @param {Object} node
      * @returns {Object}
      * @description Copies the content currently in the dialog editors into the 
      * chosen node object and returns it. 
      */
-    function copyContentIntoNode(content, node) {
+    function copyContentIntoNode(content, tabs, node) {
         for (var prop in content) {
             if (content.hasOwnProperty(prop)) {
-                for (var i = 0; i < node.tabs.length; i++) {
-                    if (node.tabs[i]) {
+                if (prop !== 'dtgeLinkedID') {
+                    var value = '';
+                    // get version to save
+                    for (var i = 0; i < tabs.length; i++) {
+                        for (var j = 0; j < tabs[i].properties.length; j++) {
+                            if (tabs[i].properties[j].alias === prop) {
+                                value = tabs[i].properties[j].value;
+                            }
+                        }
+                    }
+                    // overwrite version on node to save
+                    for (var i = 0; i < node.tabs.length; i++) {
                         for (var j = 0; j < node.tabs[i].properties.length; j++) {
-                            if (node.tabs[i].properties[j]) {
-                                if (node.tabs[i].properties[j].alias == prop) {
-                                    if (node.tabs[i].properties[j].alias !== "dtgeLinkedID") {
-                                        node.tabs[i].properties[j].value = content[prop];
-                                    }
-                                }
+                            if (node.tabs[i].properties[j].alias == prop) {
+                                node.tabs[i].properties[j].value = value;
                             }
                         }
                     }
@@ -268,8 +275,6 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
                     }
                 }
             }
-
-            console.info('$scope: ', $scope);
 
             $scope.content = value;
             $scope.contentTypeAlias = $scope.model.node.contentTypeAlias;
