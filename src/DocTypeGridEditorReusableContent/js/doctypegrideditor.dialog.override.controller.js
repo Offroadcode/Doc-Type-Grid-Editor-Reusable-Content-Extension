@@ -268,8 +268,8 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
 
             for (var t = 0; t < $scope.model.node.tabs.length; t++) {
                 var tab = $scope.model.node.tabs[t];
-                for (var p = 0; p < $scope.model.node.properties.length; p++) {
-                    var prop = $scope.model.node.properties[p];
+                for (var p = 0; p < tab.properties.length; p++) {
+                    var prop = tab.properties[p];
                     if (typeof prop.value !== "function") {
                         value[prop.alias] = prop.value;
                     }
@@ -463,7 +463,6 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
     };
 
     /* Init */
-    console.info('$scope.model: ', $scope.model);
     var nameExp = !!$scope.model.nameTemplate
                 ? $interpolate($scope.model.nameTemplate)
                 : undefined;
