@@ -1,29 +1,35 @@
 <ng-form name="dtgeForm" novalidate>
-    <div 
-        class="dtge-dialog umb-panel" 
-        ng-controller="Our.Umbraco.DTGERCE.Dialog">
+    <div class="dtge-dialog" ng-controller="Our.Umbraco.DTGERCE.Dialog">
 
-        <div class="umb-panel-body no-header with-footer umb-scrollable" ng-switch="dialogMode">
-
+        <div ng-switch="dialogMode">
 
             <!-- normal dialog view -->
             <div ng-show="!isLinkedToNode">
-                <umb-control-group label="Choose a content type" ng-switch-when="selectDocType">
-                    <select class="umb-editor" ng-change="selectDocType()" name="selectDocType" ng-model="$parent.$parent.selectedDocType" ng-options="dt as dt.name for dt in docTypes" required>
-                        <option value=""><localize key="choose" />...</option>
-                    </select>
+                <umb-control-group label="{{selectContentTypeLabel}}" ng-switch-when="selectDocType">
+                    <ul class="umb-actions umb-actions-child">
+                        <li data-element="action-create-{{docType.alias}}" ng-repeat="docType in docTypes | orderBy:'name':false">
+                            <a ng-click="selectDocType(docType.alias)">
+                                <i class="large {{docType.icon}}"></i>
+                                <span class="menu-label">
+                                    {{docType.name}}
+                                    <small>
+                                        {{docType.description}}
+                                    </small>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
                 </umb-control-group>
 
+
                 <div ng-switch-when="edit">
-                    
-                    <fieldset ng-repeat="tab in node.tabs">
-                        <legend style="font-size: 18px;">{{tab.alias}}</legend>
+                    <fieldset ng-repeat="tab in model.node.tabs">
+                        <legend style="font-size: 18px;">{{tab.label || tab.alias}}</legend>
                         <umb-property property="property"
-                                    ng-repeat="property in tab.properties">
+                                        ng-repeat="property in tab.properties">
                             <umb-editor model="property" ng-if="property.alias !== 'dtgeLinkedId'"></umb-editor>
                         </umb-property>
                     </fieldset>
-
                 </div>
 
                 <!-- added buttons -->
@@ -60,24 +66,6 @@
                 </div>                
             </div>
 
-
-        </div>
-
-        <div class="umb-panel-footer">
-            <div class="umb-el-wrap umb-panel-buttons">
-                <div class="btn-toolbar umb-btn-toolbar pull-right">
-
-
-                    <a href ng-click="close()" class="btn btn-link">
-                        <localize key="general_cancel">Cancel</localize>
-                    </a>
-
-                    <button class="btn btn-primary" ng-click="save()">
-                        <localize key="buttons_save">Save</localize>
-                    </button>
-
-                </div>
-            </div>
         </div>
     </div>
 </ng-form>

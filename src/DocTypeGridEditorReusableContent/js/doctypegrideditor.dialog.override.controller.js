@@ -91,13 +91,13 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
         if (formHelper.submitForm({ scope: $scope, formCtrl: $scope.dtgeForm })) {
 
             // Copy property values to scope model value
-            if ($scope.node) {
+            if ($scope.model.node) {
                 var value = {
-                    name: $scope.dialogOptions.editorName
+                    name: $scope.model.dialogData.editorName
                 };
 
-                for (var t = 0; t < $scope.node.tabs.length; t++) {
-                    var tab = $scope.node.tabs[t];
+                for (var t = 0; t < $scope.model.node.tabs.length; t++) {
+                    var tab = $scope.model.node.tabs[t];
                     for (var p = 0; p < tab.properties.length; p++) {
                         var prop = tab.properties[p];
                         if (typeof prop.value !== "function") {
@@ -146,7 +146,7 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
         var options = {
             multipicker: false,
             filterCssClass: 'not-allowed not-published',
-            filter: $scope.node.contentTypeAlias,            
+            filter: $scope.model.node.contentTypeAlias,            
             callback: $scope.processSelectedNodeToImportFrom
         };
         dialogService.contentPicker(options);
@@ -162,7 +162,7 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
         var options = {
             multipicker: false,
             filterCssClass: 'not-allowed not-published',
-            filter: $scope.node.contentTypeAlias,
+            filter: $scope.model.node.contentTypeAlias,
             callback: $scope.processSelectedNodeToLink
         };
         dialogService.contentPicker(options);        
@@ -252,26 +252,27 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
      * node content.
      */
     function getNodeContent() {
-        // It's possible $scope.node isn't ready yet when this first loads.
+        // It's possible $scope.model.node isn't ready yet when this first loads.
         // So check that it exists first.
-        if ($scope.node !== null) {
-
+        if ($scope.model.node !== null) {
             var value = {
-                name: $scope.dialogOptions.editorName
+                name: $scope.model.dialogData.editorName
             };
 
-            for (var t = 0; t < $scope.node.tabs.length; t++) {
-                var tab = $scope.node.tabs[t];
-                for (var p = 0; p < tab.properties.length; p++) {
-                    var prop = tab.properties[p];
+            for (var t = 0; t < $scope.model.node.tabs.length; t++) {
+                var tab = $scope.model.node.tabs[t];
+                for (var p = 0; p < $scope.model.node.properties.length; p++) {
+                    var prop = $scope.model.node.properties[p];
                     if (typeof prop.value !== "function") {
                         value[prop.alias] = prop.value;
                     }
                 }
             }
 
+            console.info('$scope: ', $scope);
+
             $scope.content = value;
-            $scope.contentTypeAlias = $scope.node.contentTypeAlias;
+            $scope.contentTypeAlias = $scope.model.node.contentTypeAlias;
             if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
                 $scope.$apply();
             }
@@ -311,12 +312,12 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
      */
     function importFromNode(nodeId) {
         contentResource.getById(nodeId).then(function(node) {
-            if (node && node.contentTypeAlias && node.contentTypeAlias == $scope.node.contentTypeAlias) {
+            if (node && node.contentTypeAlias && node.contentTypeAlias == $scope.model.node.contentTypeAlias) {
                 for (var i = 0; i < node.tabs.length; i++) {
-                    if ($scope.node.tabs[i]) {
+                    if ($scope.model.node.tabs[i]) {
                         for (var j = 0; j < node.tabs[i].properties.length; j++) {
                             if (node.tabs[i].properties[j].alias !== 'dtgeLinkedId') { // don't want to overwrite any linked ID.
-                                $scope.node.tabs[i].properties[j].value = node.tabs[i].properties[j].value;
+                                $scope.model.node.tabs[i].properties[j].value = node.tabs[i].properties[j].value;
                             }
                         }
                     }
@@ -345,9 +346,9 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
             isGood: true
         };
         contentResource.getById(node.id).then(function(fullNode) {
-            if (fullNode.contentTypeAlias && fullNode.contentTypeAlias !== $scope.node.contentTypeAlias) {
+            if (fullNode.contentTypeAlias && fullNode.contentTypeAlias !== $scope.model.node.contentTypeAlias) {
                 data.isGood = false;
-                data.contentType = $scope.node.contentTypeAlias;
+                data.contentType = $scope.model.node.contentTypeAlias;
             }
             dialogService.open({
                 template: "/App_Plugins/DocTypeGridEditorReusableContent/views/confirm.import.dialog.html",
@@ -373,9 +374,9 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
             isGood: true
         };
         contentResource.getById(node.id).then(function(fullNode) {
-            if (fullNode.contentTypeAlias && fullNode.contentTypeAlias !== $scope.node.contentTypeAlias) {
+            if (fullNode.contentTypeAlias && fullNode.contentTypeAlias !== $scope.model.node.contentTypeAlias) {
                 data.isGood = false;
-                data.contentType = $scope.node.contentTypeAlias;
+                data.contentType = $scope.model.node.contentTypeAlias;
             }
             dialogService.open({
                 template: "/App_Plugins/DocTypeGridEditorReusableContent/views/confirm.link.dialog.html",
@@ -445,11 +446,11 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
     };
 
     $scope.updateLinkedId = function(nodeId) {
-        if ($scope.node && $scope.node.tabs && $scope.node.tabs.length > 0) {
-            for (var i = 0; i < $scope.node.tabs.length; i++) {
-                for (var j = 0; j < $scope.node.tabs[i].properties.length; j++) {
-                    if ($scope.node.tabs[i].properties[j].alias == 'dtgeLinkedId') {
-                        $scope.node.tabs[i].properties[j].value = nodeId;
+        if ($scope.model.node && $scope.model.node.tabs && $scope.model.node.tabs.length > 0) {
+            for (var i = 0; i < $scope.model.node.tabs.length; i++) {
+                for (var j = 0; j < $scope.model.node.tabs[i].properties.length; j++) {
+                    if ($scope.model.node.tabs[i].properties[j].alias == 'dtgeLinkedId') {
+                        $scope.model.node.tabs[i].properties[j].value = nodeId;
                     }
                 }
             }
@@ -457,10 +458,10 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
     };
 
     /* Init */
-
-    var nameExp = !!$scope.dialogOptions.nameTemplate
-        ? $interpolate($scope.dialogOptions.nameTemplate)
-        : undefined;
+    console.info('$scope.model: ', $scope.model);
+    var nameExp = !!$scope.model.nameTemplate
+                ? $interpolate($scope.model.nameTemplate)
+                : undefined;
 
     $scope.init();
 
