@@ -228,7 +228,7 @@ angular.module('umbraco').controller('Our.Umbraco.DTGERCE.Dialog', ['$scope', '$
     function copyContentIntoNode(content, tabs, node) {
         for (var prop in content) {
             if (content.hasOwnProperty(prop)) {
-                if (prop !== 'dtgeLinkedID') {
+                if (prop !== 'dtgeLinkedId') {
                     var value = '';
                     // get version to save
                     for (var i = 0; i < tabs.length; i++) {
